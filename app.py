@@ -6,19 +6,15 @@ from gtts import gTTS
 from PIL import Image
 import base64
 
-# Título principal con un estilo diferente
 st.markdown("<h1 style='text-align: center; color: #FFC0CB;'>Conversión de Texto a Audio</h1>", unsafe_allow_html=True)
 
-# Nueva imagen
 image = Image.open('nueva_imagen.jpg')
 st.image(image, width=400)
 
-# Sidebar para la interacción del usuario
 with st.sidebar:
     st.subheader("Escribe o selecciona texto para convertirlo en audio.")
     st.info("¡Convierte tus palabras en sonido!")
 
-# Sección de fábula
 st.markdown("## Una Nueva Fábula")
 st.write("""
 Había una vez un ciervo que, al verse reflejado en el agua, admiró la majestuosidad de sus cuernos, pero se quejó de sus delgadas patas.
@@ -26,22 +22,18 @@ De repente, un león apareció, y el ciervo huyó a gran velocidad, pero sus cue
 Mientras el león se acercaba, el ciervo pensó: 'Lo que admiraba me traiciona, y lo que despreciaba me salva la vida'.
 """)
 
-# Entrada de texto para el usuario
 st.markdown("### ¿Quieres escucharlo? Ingresa el texto a continuación:")
 text = st.text_area("Ingrese el texto que desea convertir a audio:")
 
-# Selección del idioma
 option_lang = st.selectbox("Selecciona el idioma", ("Español", "English"))
 lg = 'es' if option_lang == "Español" else 'en'
 
-# Función de conversión de texto a voz
 def text_to_speech(text, lg):
     tts = gTTS(text, lang=lg)
     my_file_name = text[:20] if len(text) > 20 else "audio"
     tts.save(f"temp/{my_file_name}.mp3")
     return my_file_name, text
 
-# Conversión y reproducción de audio
 if st.button("Convertir a Audio"):
     if text:
         result, output_text = text_to_speech(text, lg)
@@ -50,7 +42,6 @@ if st.button("Convertir a Audio"):
         st.markdown("## Tu Audio:")
         st.audio(audio_bytes, format="audio/mp3", start_time=0)
 
-        # Botón de descarga
         with open(f"temp/{result}.mp3", "rb") as f:
             data = f.read()
 
@@ -63,7 +54,6 @@ if st.button("Convertir a Audio"):
     else:
         st.warning("Por favor, ingrese un texto para convertir.")
 
-# Eliminar archivos después de 7 días
 def remove_files(n):
     mp3_files = glob.glob("temp/*mp3")
     if mp3_files:
