@@ -10,7 +10,7 @@ import base64
 st.markdown("<h1 style='text-align: center; color: #4CAF50;'>Conversión de Texto a Audio</h1>", unsafe_allow_html=True)
 
 # Nueva imagen
-image = Image.open('nueva_imagen.png')
+image = Image.open('nueva_imagen.jpg')
 st.image(image, width=400)
 
 # Sidebar para la interacción del usuario
