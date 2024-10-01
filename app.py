@@ -6,25 +6,62 @@ from gtts import gTTS
 from PIL import Image
 import base64
 
-# Título principal con un estilo diferente
-st.markdown("<h1 style='text-align: center; color: #4CAF50;'>Conversión de Texto a Audio</h1>", unsafe_allow_html=True)
+# Estilo CSS para mejorar la apariencia
+st.markdown("""
+<style>
+    .title {
+        text-align: center;
+        color: #4CAF50;
+        font-size: 36px;
+        font-family: 'Arial', sans-serif;
+        margin-bottom: 20px;
+    }
+    .sidebar .sidebar-content {
+        background-color: #f0f2f5;
+        border-radius: 10px;
+        padding: 10px;
+    }
+    .fable {
+        border: 2px solid #4CAF50;
+        border-radius: 10px;
+        padding: 10px;
+        background-color: #e8f5e9;
+    }
+    .audio-section {
+        border: 2px solid #4CAF50;
+        border-radius: 10px;
+        background-color: #f1f8e9;
+        padding: 10px;
+    }
+</style>
+""", unsafe_allow_html=True)
 
-# Nueva imagen
-image = Image.open('nueva_imagen.jpg')
-st.image(image, width=400)
+# Título principal
+st.markdown("<h1 class='title'>Conversión de Texto a Audio</h1>", unsafe_allow_html=True)
+
+# Subir imagen
+uploaded_file = st.file_uploader("Elige una imagen para mostrar", type=["png", "jpg", "jpeg"])
+if uploaded_file is not None:
+    image = Image.open(uploaded_file)
+    st.image(image, width=400)
+else:
+    st.warning("Por favor, sube una imagen para mostrar.")
 
 # Sidebar para la interacción del usuario
 with st.sidebar:
     st.subheader("Escribe o selecciona texto para convertirlo en audio.")
     st.info("¡Convierte tus palabras en sonido!")
+    st.image('https://via.placeholder.com/150', caption='Elige una imagen inspiradora')  # Imagen de ejemplo
 
 # Sección de fábula
 st.markdown("## Una Nueva Fábula")
-st.write("""
-Había una vez un ciervo que, al verse reflejado en el agua, admiró la majestuosidad de sus cuernos, pero se quejó de sus delgadas patas.
-De repente, un león apareció, y el ciervo huyó a gran velocidad, pero sus cuernos se enredaron en las ramas de un árbol.
-Mientras el león se acercaba, el ciervo pensó: 'Lo que admiraba me traiciona, y lo que despreciaba me salva la vida'.
-""")
+st.markdown("""
+<div class='fable'>
+    Había una vez un ciervo que, al verse reflejado en el agua, admiró la majestuosidad de sus cuernos, pero se quejó de sus delgadas patas.
+    De repente, un león apareció, y el ciervo huyó a gran velocidad, pero sus cuernos se enredaron en las ramas de un árbol.
+    Mientras el león se acercaba, el ciervo pensó: 'Lo que admiraba me traiciona, y lo que despreciaba me salva la vida'.
+</div>
+""", unsafe_allow_html=True)
 
 # Entrada de texto para el usuario
 st.markdown("### ¿Quieres escucharlo? Ingresa el texto a continuación:")
@@ -47,19 +84,19 @@ if st.button("Convertir a Audio"):
         result, output_text = text_to_speech(text, lg)
         audio_file = open(f"temp/{result}.mp3", "rb")
         audio_bytes = audio_file.read()
-        st.markdown("## Tu Audio:")
+        st.markdown("<h2>Tu Audio:</h2>", unsafe_allow_html=True)
         st.audio(audio_bytes, format="audio/mp3", start_time=0)
 
         # Botón de descarga
         with open(f"temp/{result}.mp3", "rb") as f:
             data = f.read()
 
-        def get_binary_file_downloader_html(bin_file, file_label='File'):
+        def get_binary_file_downloader_html(bin_file, file_label='Archivo de Audio'):
             bin_str = base64.b64encode(data).decode()
             href = f'<a href="data:application/octet-stream;base64,{bin_str}" download="{os.path.basename(bin_file)}">Descargar {file_label}</a>'
             return href
 
-        st.markdown(get_binary_file_downloader_html("audio.mp3", file_label="Archivo de Audio"), unsafe_allow_html=True)
+        st.markdown(get_binary_file_downloader_html("audio.mp3"), unsafe_allow_html=True)
     else:
         st.warning("Por favor, ingrese un texto para convertir.")
 
@@ -75,3 +112,4 @@ def remove_files(n):
                 print("Archivo eliminado:", f)
 
 remove_files(7)
+
